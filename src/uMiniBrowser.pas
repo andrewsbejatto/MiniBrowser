@@ -143,8 +143,6 @@ type
     procedure Chromium1RenderCompMsg(Sender: TObject; var aMessage : TMessage; var aHandled: Boolean);
     procedure Chromium1LoadingProgressChange(Sender: TObject; const browser: ICefBrowser; const progress: Double);
     procedure Chromium1LoadEnd(Sender: TObject; const browser: ICefBrowser; const frame: ICefFrame; httpStatusCode: Integer);
-    procedure Chromium1LoadError(Sender: TObject; const browser: ICefBrowser; const frame: ICefFrame; errorCode: Integer; const errorText, failedUrl: ustring);
-    procedure Chromium1CertificateError(Sender: TObject; const browser: ICefBrowser; certError: Integer; const requestUrl: ustring; const sslInfo: ICefSslInfo; const callback: ICefCallback; out Result: Boolean);
     procedure Chromium1NavigationVisitorResultAvailable(Sender: TObject; const entry: ICefNavigationEntry; current: Boolean; index, total: Integer; var aResult: Boolean);
     procedure Chromium1DownloadImageFinished(Sender: TObject; const imageUrl: ustring; httpStatusCode: Integer; const image: ICefImage);
     procedure Chromium1CookiesFlushed(Sender: TObject);
@@ -193,6 +191,8 @@ type
     procedure Chromium1GetAuthCredentials(Sender: TObject; const browser: ICefBrowser; const originUrl: ustring; isProxy: Boolean; const host: ustring; port: Integer; const realm, scheme: ustring; const callback: ICefAuthCallback; out Result: Boolean);
     procedure URLCbxKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnBookmarksClick(Sender: TObject);
+    procedure Chromium1CertificateError(Sender: TObject; const browser: ICefBrowser; certError: TCefErrorCode; const requestUrl: ustring; const sslInfo: ICefSslInfo; const callback: ICefCallback; out Result: Boolean);
+    procedure Chromium1LoadError(Sender: TObject; const browser: ICefBrowser; const frame: ICefFrame; errorCode: TCefErrorCode; const errorText, failedUrl: ustring);
 
   protected
     FAuthenticationUsername: String;
@@ -495,14 +495,19 @@ begin
   aResult := FAllowDownloads;
 end;
 
-procedure TFrmMiniBrowser.Chromium1CertificateError(Sender: TObject;
-  const browser: ICefBrowser; certError: Integer;
-  const requestUrl: ustring; const sslInfo: ICefSslInfo;
-  const callback: ICefCallback; out Result: Boolean);
+procedure TFrmMiniBrowser.Chromium1CertificateError(Sender: TObject; const browser: ICefBrowser; certError: TCefErrorCode; const requestUrl: ustring; const sslInfo: ICefSslInfo; const callback: ICefCallback; out Result: Boolean);
 begin
-  CefDebugLog('Certificate error code:' + inttostr(certError) +
-              ' - URL:' + requestUrl, CEF_LOG_SEVERITY_ERROR);
-  Result := False;
+  // Exibe uma mensagem de aviso ao usuário
+  if MessageDlg('O certificado digital do site é inválido. Deseja continuar?',
+    mtWarning, [mbYes, mbNo], 0) = mrYes then
+  begin
+    Result := False; // Permite o acesso ao site
+    callback.Cont; // Importante: Chame Continue(True) do callback
+  end else
+  begin
+    Result := True; // Bloqueia o acesso ao site
+    callback.Cancel; // Importante: Chame Continue(True) do callback
+  end;
 end;
 
 procedure TFrmMiniBrowser.Chromium1Close(Sender: TObject; const browser: ICefBrowser; var aAction : TCefCloseBrowserAction);
@@ -968,9 +973,7 @@ begin
     end;
 end;
 
-procedure TFrmMiniBrowser.Chromium1LoadError(Sender: TObject;
-  const browser: ICefBrowser; const frame: ICefFrame; errorCode: Integer;
-  const errorText, failedUrl: ustring);
+procedure TFrmMiniBrowser.Chromium1LoadError(Sender: TObject; const browser: ICefBrowser; const frame: ICefFrame; errorCode: TCefErrorCode; const errorText, failedUrl: ustring);
 var
   TempString : string;
 begin

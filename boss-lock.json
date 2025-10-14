@@ -1,0 +1,14 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2025-10-14T11:06:25.3000522-03:00",
+	"installedModules": {
+		"github.com/git@github.com:andrewsbejatto/bookmarksmanager4delphi": {
+			"name": "BookmarksManager4Delphi",
+			"version": "0.0.1",
+			"hash": "3f03c5af10bf0aae3e69521445512711",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}

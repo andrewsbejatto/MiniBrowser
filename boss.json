@@ -1,0 +1,12 @@
+{
+	"name": "MiniBrowser",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./src",
+	"browsingpath": "",
+	"projects": [],
+	"dependencies": {
+		"github.com/git@github.com:andrewsbejatto/BookmarksManager4Delphi": "^0.0.1"
+	}
+}

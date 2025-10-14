@@ -1,7 +1,7 @@
 object FrmMiniBrowser: TFrmMiniBrowser
   Left = 0
   Top = 0
-  Caption = 'MiniBrowser'
+  Caption = 'MiniBrowser v14.10.2025'
   ClientHeight = 696
   ClientWidth = 1073
   Color = clBtnFace
@@ -206,7 +206,7 @@ object FrmMiniBrowser: TFrmMiniBrowser
         Margins.Right = 0
         Margins.Bottom = 8
         Align = alLeft
-        Caption = #8801
+        Caption = #9829
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -17
@@ -268,6 +268,7 @@ object FrmMiniBrowser: TFrmMiniBrowser
     OnZoomPctAvailable = Chromium1ZoomPctAvailable
     OnRenderCompMsg = Chromium1RenderCompMsg
     OnLoadEnd = Chromium1LoadEnd
+    OnLoadError = Chromium1LoadError
     OnLoadingStateChange = Chromium1LoadingStateChange
     OnBeforeContextMenu = Chromium1BeforeContextMenu
     OnPreKeyEvent = Chromium1PreKeyEvent
@@ -286,6 +287,7 @@ object FrmMiniBrowser: TFrmMiniBrowser
     OnBeforeClose = Chromium1BeforeClose
     OnClose = Chromium1Close
     OnGetAuthCredentials = Chromium1GetAuthCredentials
+    OnCertificateError = Chromium1CertificateError
     OnSelectClientCertificate = Chromium1SelectClientCertificate
     OnBeforeResourceLoad = Chromium1BeforeResourceLoad
     OnResourceResponse = Chromium1ResourceResponse
